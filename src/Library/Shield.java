@@ -11,6 +11,13 @@ public class Shield extends Entity{
 
 
     public void move() {
-    super.move(this,1);
+        new Thread(()->{
+            try {
+                Thread.sleep(1000);
+                super.move(this,1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 }

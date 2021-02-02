@@ -8,7 +8,14 @@ public class Archer extends Entity {
         super(x, y, grid, type, player,imagePath,300,200,2);
     }
     public void move() {
-        super.move(this,1);
+        new Thread(()->{
+            try {
+                Thread.sleep(1000);
+                super.move(this,1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
 
     }
 }

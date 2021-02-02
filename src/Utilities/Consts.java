@@ -44,7 +44,7 @@ public class Consts {
     }
 
     public static String getElectricalTowerImgPath() {
-        return "file:resources/electrical.png";
+        return "file:resources/electrical.jpg";
     }
     public static String getHomeImgPath() {
         return "file:resources/home.png";

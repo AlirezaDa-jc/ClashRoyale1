@@ -10,7 +10,14 @@ public class Knight extends Entity {
     }
 
     public void move() {
-        super.move(this,2);
+        new Thread(()->{
+            try {
+                Thread.sleep(500);
+                super.move(this,2);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
 
     }
 }

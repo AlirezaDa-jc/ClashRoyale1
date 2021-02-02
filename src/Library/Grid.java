@@ -5,6 +5,8 @@ import FileAndUserIO.FileIO;
 import Utilities.Consts;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 
 public class Grid {
@@ -12,7 +14,7 @@ public class Grid {
     private final int rows;
     private final int columns;
     private final Entity[][] cells;
-    private final ArrayList<Entity> entities = new ArrayList<Entity>();
+    private final Set<Entity> entities = new HashSet<Entity>();
     private char[][] map;
     private boolean lost = false;
     private int player1Towers;
@@ -141,10 +143,9 @@ public class Grid {
         return this.player2Towers == 0;
     }
 
-    public ArrayList<Entity> getEntities() {
-        return this.entities;
+    public Set<Entity> getEntities() {
+        return entities;
     }
-
 
 //    public void ChangeGhostState(boolean afraid) throws EntityNotFoundException {
 //        for (int i = 0; i < this.getGhosts().size(); i++) {

@@ -17,11 +17,7 @@ public class Game extends Observable implements Runnable {
     private static final int lines = 5;
     private static final int columns = 24;
     private final Grid grid;
-    private Direction dir = Direction.RIGHT;
-    private Direction triedDir = null;
     private boolean exit = false;
-    private static int boostDuration = 0;
-    private static boolean boosted = false;
     private static final int defaultSleepTime = 1000;
     private static int player1Mana = 0;
     private static int player2Mana = 0;
@@ -30,10 +26,6 @@ public class Game extends Observable implements Runnable {
     public Game() {
         super();
         this.grid = new Grid(lines, columns);
-//        Thread thread = new Thread(()->{
-//
-//        });
-//        thread.start();
     }
 
 
@@ -41,42 +33,25 @@ public class Game extends Observable implements Runnable {
     public synchronized void run() {
         while (!this.exit) {
             try {
-            this.setChanged();
-            this.notifyObservers();
-            player1Mana = player1Mana + 10;
-            player2Mana = player2Mana + 10;
-            Thread.sleep(defaultSleepTime);
-            System.out.println(player1Mana);
-            System.out.println(player2Mana);
-//                this.manageBoostInteraction();
+                this.setChanged();
+                this.notifyObservers();
+                player1Mana = player1Mana + 10;
+                player2Mana = player2Mana + 10;
+                if (player1Mana > 100) {
+                    player1Mana -= 10;
+                }
+                if (player2Mana > 100) {
+                    player2Mana -= 10;
+                }
+                Thread.sleep(defaultSleepTime);
+                System.out.println(player1Mana);
+                System.out.println(player2Mana);
 
             } catch (InterruptedException ex) {
                 Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
-
-//    private void manageBoostInteraction() throws EntityNotFoundException {
-//        if (boosted) {
-//            boostDuration--;
-//            this.getState().ChangeGhostState(true);
-//            if (boostDuration == 0) {
-//                boosted = false;
-//                this.getState().ChangeGhostState(false);
-//            }
-//        }
-//    }
-
-
-//    public static void setPacmanBoosted() {
-//        Game.boosted = true;
-//        Game.boostDuration = 15;
-//    }
-
-
-//    public static boolean isPacmanBoosted() {
-//        return Game.boostDuration > 0;
-//    }
 
 
     public void stop() {
@@ -89,43 +64,6 @@ public class Game extends Observable implements Runnable {
     }
 
 
-//    public Direction getDirection() {
-//        return this.dir;
-//    }
-//
-//
-//    public void setDirection(Direction dir) {
-//        this.dir = dir;
-//    }
-//
-//
-//    public Direction getLastTriedDirection() {
-//        return this.triedDir;
-//    }
-//
-//
-//    public void setLastTriedDirection(Direction dir) {
-//        this.triedDir = dir;
-//    }
-
-//    public void movePacman() {
-//        try {
-//            if (this.getLastTriedDirection() != null) {
-//                if (this.getState().getPacman().move(this.getLastTriedDirection())) {
-//                    this.setDirection(this.getLastTriedDirection());
-//                    this.setLastTriedDirection(null);
-//                } else {
-//                    this.getState().getPacman().move(this.getDirection());
-//                }
-//            } else {
-//                this.getState().getPacman().move(this.getDirection());
-//            }
-//
-//        } catch (EntityNotFoundException ex) {
-//            System.out.println(ex + "||| Error occurred in movePacman()");
-//        }
-//    }
-
     public void moveEntities() {
         ArrayList<Goblin> goblins = this.getState().getGoblins();
         for (Goblin ghost : goblins) {
@@ -134,22 +72,15 @@ public class Game extends Observable implements Runnable {
         }
         ArrayList<Archer> archers = this.getState().getArchers();
         for (Archer archer : archers) {
-
-                    archer.move();
-
+            archer.move();
         }
         ArrayList<Knight> knights = this.getState().getKnights();
         for (Knight knight : knights) {
-
-                    knight.move();
-
+            knight.move();
         }
         ArrayList<Shield> shields = this.getState().getShields();
         for (Shield shield : shields) {
-
-                    shield.move();
-
-
+            shield.move();
         }
     }
 
@@ -165,7 +96,6 @@ public class Game extends Observable implements Runnable {
                 Goblin goblin = new Goblin(grid.getPlayer2HomeX(), grid.getPlayer2HomeY(), grid, EntityType.Goblin, Consts.getPlayer2GoblinImgPath(), player);
                 grid.setCell(goblin);
                 player2Mana = player2Mana - 10;
-
             }
         }
     }
@@ -220,8 +150,15 @@ public class Game extends Observable implements Runnable {
     }
 
     public void attackTowers() {
-        ArrayList<BlackTower> blackTowers = getState().getBlackTowers();
-        ArrayList<ElectricTower> electricTowers = getState().getElectricTowers();
+        ArrayList<BlackTower> blackTowers = new ArrayList<>();
+        if (!getState().getBlackTowers().isEmpty()) {
+            blackTowers = getState().getBlackTowers();
+        }
+
+        ArrayList<ElectricTower> electricTowers = new ArrayList<>();
+        if (!getState().getElectricTowers().isEmpty()) {
+            electricTowers = getState().getElectricTowers();
+        }
         try {
             Optional<BlackTower> blackTowerFirstPlayerOptional = blackTowers.stream().filter(c -> c.getPlayer().equals("player1")).findFirst();
             Optional<BlackTower> blackTowerSecondPlayerOptional = blackTowers.stream().filter(c -> c.getPlayer().equals("player2")).findFirst();
@@ -238,12 +175,11 @@ public class Game extends Observable implements Runnable {
     }
 
     private void attackTowers(Optional<BlackTower> blackTowerOptional, Optional<ElectricTower> electricTowerOptional, List<Entity> playerSoldiers) {
-        if(playerSoldiers.isEmpty()){
+        if (playerSoldiers.isEmpty()) {
             return;
         }
         for (int i = 0; i < playerSoldiers.size(); i++) {
             Entity entity = playerSoldiers.get(i);
-            //Todo Bar Asas Grid bayad Anjm Shavad
             if (blackTowerOptional.isPresent()) {
                 BlackTower blackTower = blackTowerOptional.get();
                 if (entity.getX() - 2 <= blackTower.getX()) {

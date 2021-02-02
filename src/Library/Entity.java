@@ -137,15 +137,7 @@ public class Entity {
         return ret;
     }
 
-//    private boolean move(int xOffset, int yOffset) {
-//        if (this.grid.isMovable(x + xOffset, y + yOffset)) {
-//            this.grid.getCells()[this.x][this.y] = new Entity(this.x, this.y, this.grid, EntityType.DEFAULT, "",
-//                    Consts.getDefaultImgPath(),0,0,0);
-//            this.grid.getCells()[this.x + xOffset][this.y + yOffset] = this;
-//            return true;
-//        }
-//        return false;
-//    }
+
 
     public void takeDamage(int i) {
         hp =- i;
@@ -157,65 +149,4 @@ public class Entity {
     }
 
 
-//    protected boolean move(int xOffset, int yOffset) {
-//        boolean moveAble;
-//        boolean lost = false;
-//        moveAble = this.grid.isMovable(x + xOffset, y + yOffset);
-//        boolean pacmanBoosted = Game.isPacmanBoosted();
-//        if (this.type == EntityType.PACMAN && !pacmanBoosted) {
-//            lost = this.grid.contains(x + xOffset, y + yOffset, EntityType.GHOST);
-//        } else if (this.type == EntityType.GHOST && !pacmanBoosted) {
-//            lost = this.grid.contains(x + xOffset, y + yOffset, EntityType.PACMAN);
-//        }
-//
-//        boolean gum = this.grid.contains(x + xOffset, y + yOffset, EntityType.GUM);
-//        boolean bigGum = this.grid.contains(x + xOffset, y + yOffset, EntityType.BIG_GUM);
-//        if (moveAble & !lost) {
-//            if (this instanceof Pacman) {
-//                Entity entity = this.grid.getCells()[this.x + xOffset][this.y + yOffset];
-//                Entity entity1 = this.grid.getCells()[this.x][this.y];
-//                eatGhost(pacmanBoosted, entity);
-//                eatGhost(pacmanBoosted, entity1);
-//                this.grid.getCells()[this.x + xOffset][this.y + yOffset] = this;
-//                this.grid.getCells()[this.x][this.y] = new Entity(this.x, this.y, this.grid, Consts.getDefaultImgPath(), EntityType.DEFAULT);
-//                if (gum || bigGum) {
-//                    this.grid.eatenGum();
-//                    Game.addScore(1);
-//                    if (bigGum) {
-//                        Game.setPacmanBoosted();
-//                        Game.addScore(4);
-//                    }
-//                }
-//            }
-//            if (this instanceof Ghost) {
-//
-//                boolean ghost = this.grid.contains(x + xOffset, y + yOffset, EntityType.GHOST);
-//                if (ghost) {
-//                    return false;
-//                } else if (gum) {
-//                    this.grid.getCells()[this.x][this.y] = new Entity(this.x, this.y, this.grid, Consts.getSmallGumImgPath(), EntityType.GUM);
-//                } else if (bigGum) {
-//                    this.grid.getCells()[this.x][this.y] = new Entity(this.x, this.y, this.grid, Consts.getBigGumImgPath(), EntityType.BIG_GUM);
-//                } else {
-//                    this.grid.getCells()[this.x][this.y] = new Entity(this.x, this.y, this.grid, Consts.getDefaultImgPath(), EntityType.DEFAULT);
-//                }
-//                this.grid.getCells()[this.x + xOffset][this.y + yOffset] = this;
-//            }
-//            this.y += yOffset;
-//            this.x += xOffset;
-//        }
-//        if (lost) {
-//            this.grid.setLost(true);
-//        }
-//        return moveAble;
-//    }
-
-//    private void eatGhost(boolean pacmanBoosted, Entity entity) {
-//        if (entity instanceof Ghost && pacmanBoosted) {
-//            Game.addEatenGhosts(entity);
-//            entity.setX(9);
-//            entity.setY(12);
-//            Game.addScore(10);
-//        }
-//    }
 }
