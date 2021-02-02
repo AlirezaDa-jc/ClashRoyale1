@@ -112,11 +112,11 @@ public class Entity {
         boolean flag = false;
         if (player.equals("player1")) {
             while (y != 0) {
-                flag = this.grid.isMovable(x, this.y - y);
+                flag = this.grid.isMovable(x, this.y + y);
                 if (!flag) {
                     break;
                 }
-                y--;
+                y++;
             }
             if (moveEntity(yOffset, flag)) return true;
             moveEntity(-1,true);
