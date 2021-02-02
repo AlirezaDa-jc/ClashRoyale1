@@ -44,8 +44,8 @@ public class ClashRoyale extends Application {
             }
         }
         border.setCenter(gPane);
-        Scene scene = new Scene(border, Color.WHITESMOKE);
-        primaryStage.setTitle("PACMAN FX");
+        Scene scene = new Scene(border, Color.BLACK);
+        primaryStage.setTitle("Clash Royale FX");
         primaryStage.setScene(scene);
         UserIO.addEvents(primaryStage, this.game);
         primaryStage.show();

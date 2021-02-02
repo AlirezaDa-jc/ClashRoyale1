@@ -16,7 +16,6 @@ public class Grid {
     private final Entity[][] cells;
     private final Set<Entity> entities = new HashSet<Entity>();
     private char[][] map;
-    private boolean lost = false;
     private int player1Towers;
     private int player2Towers;
     private int player1HomeX;
@@ -72,6 +71,13 @@ public class Grid {
         this.player2Towers = 2;
     }
 
+    public void remove1TowerPlayer1() {
+        player1Towers =- 1;
+    }
+    public void remove1TowerPlayer2() {
+        player2Towers =- 1;
+    }
+
     public int getPlayer1HomeX() {
         return player1HomeX;
     }
@@ -90,8 +96,9 @@ public class Grid {
 
     public void setCell(Entity entity) {
         int y = entity.getY();
-        if(y < 24) {
-            int x = entity.getX();
+        int x = entity.getX();
+
+        if(y < 24 && y >= 0) {
             entities.add(entity);
             cells[x][y] = entity;
         }
@@ -105,7 +112,13 @@ public class Grid {
 
     public boolean isMovable(int x, int y) {
         if ((x < this.rows) && (y < this.columns) && (x >= 0) && (y >= 0)) {
-            return (this.cells[x][y].getType() != EntityType.BlackTower || this.cells[x][y].getType() != EntityType.ElectricTower || this.cells[x][y].getType() != EntityType.Home);
+            if(this.cells[x][y].getType() == EntityType.BlackTower){
+                return false;
+            }
+            if(this.cells[x][y].getType() == EntityType.ElectricTower){
+                return false;
+            }
+            return true;
         } else {
             return false;
         }
@@ -229,11 +242,16 @@ public class Grid {
     }
 
 
-    public void setLost(boolean lost) {
-        this.lost = lost;
+
+    public boolean checkPlayer1Lost() {
+        return player1Towers == 0;
+    }
+    public boolean checkPlayer2Lost() {
+        return player2Towers == 0;
     }
 
-    public boolean getLost() {
-        return this.lost;
+
+    public void removeEntity(Entity entity) {
+        entities.remove(entity);
     }
 }

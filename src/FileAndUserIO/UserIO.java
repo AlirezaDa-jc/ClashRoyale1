@@ -10,9 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class UserIO {
     public static void addEvents(Stage currentStage, Game g) {
-        AtomicInteger i = new AtomicInteger();
         currentStage.getScene().setOnKeyPressed(event -> {
-
                 if (event.getCode() == KeyCode.Q) {
                     g.makeGoblin("player1");
                 } else if (event.getCode() == KeyCode.W) {

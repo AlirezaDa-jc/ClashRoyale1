@@ -3,7 +3,6 @@ package Library;
 
 
 import Utilities.Consts;
-import javafx.application.Platform;
 
 public class Entity {
 
@@ -104,20 +103,36 @@ public class Entity {
 //        return ret;
 //    }
 
-    private boolean move(int xOffset, int yOffset) {
-        if (this.grid.isMovable(x + xOffset, y + yOffset)) {
-//            this.grid.getCells()[this.x][this.y] = new Entity(this.x, this.y, this.grid, EntityType.DEFAULT, "",
-//                    Consts.getDefaultImgPath(),0,0,0);
+    private boolean move(int yOffset) {
+        int y = yOffset;
+        boolean secondFlag = false;
+        boolean firstFlag = false;
+        while(y != 0){
+            firstFlag = this.grid.isMovable(x, this.y + y);
+            secondFlag = this.grid.isMovable(x, this.y - y);
+            if(!firstFlag && !secondFlag){
+                break;
+            }
+            y--;
+        }
+        if(player.equals("player1")){
+            if (moveEntity(yOffset, secondFlag)) return true;
+        }else if(player.equals("player2")) {
+            if (moveEntity(yOffset, firstFlag)) return true;
+        }
+        this.grid.setCell(this);
+        return false;
+    }
+
+    private boolean moveEntity(int yOffset, boolean firstFlag) {
+        if (firstFlag) {
             Entity defalt = new Entity(this.x, this.y, this.grid, EntityType.DEFAULT, "",
                     Consts.getDefaultImgPath(), 0, 0, 0);
             this.grid.setCell(defalt);
             this.setX(this.x);
-            this.setY(this.y+yOffset);
-            System.out.println("*");
-            System.out.println(this.getY());
+            this.setY(this.y + yOffset);
             grid.setCell(this);
-//            this.grid.getCells()[this.x + xOffset][this.y + yOffset] = this;
-//            this.grid.getCells()[this.x + xOffset][this.y + yOffset] = this;
+
             return true;
         }
         return false;
@@ -128,10 +143,10 @@ public class Entity {
         boolean ret = false;
         switch (entity.getPlayer()) {
             case "player1":
-                ret = entity.move(0, -yOffset);
+                ret = entity.move(-yOffset);
                 break;
             case "player2":
-                ret = entity.move(0, yOffset);
+                ret = entity.move(yOffset);
                 break;
         }
         return ret;
@@ -140,8 +155,16 @@ public class Entity {
 
 
     public void takeDamage(int i) {
-        hp =- i;
+        hp = hp - i;
         if(hp <= 0){
+            this.grid.removeEntity(this);
+            if(this.getType()==EntityType.BlackTower || this.getType()== EntityType.ElectricTower){
+                if(this.getPlayer().equals("player1")){
+                    grid.remove1TowerPlayer1();
+                }else {
+                    grid.remove1TowerPlayer2();
+                }
+            }
             Entity defalt = new Entity(this.x, this.y, this.grid, EntityType.DEFAULT, "",
                     Consts.getDefaultImgPath(), 0, 0, 0);
             this.grid.setCell(defalt);

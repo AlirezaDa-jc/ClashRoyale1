@@ -67,7 +67,6 @@ public class Game extends Observable implements Runnable {
     public void moveEntities() {
         ArrayList<Goblin> goblins = this.getState().getGoblins();
         for (Goblin ghost : goblins) {
-            System.out.println(goblins.size());
             ghost.move();
         }
         ArrayList<Archer> archers = this.getState().getArchers();
@@ -165,10 +164,10 @@ public class Game extends Observable implements Runnable {
             Optional<ElectricTower> electricTowerFirstPlayerOptional = electricTowers.stream().filter(c -> c.getPlayer().equals("player1")).findFirst();
             Optional<ElectricTower> electricTowerSecondPlayerOptional = electricTowers.stream().filter(c -> c.getPlayer().equals("player2")).findFirst();
 
-            List<Entity> player2Soldiers = getState().getEntities().stream().filter(c -> c.getPlayer().equals("player2")).collect(Collectors.toList());
-            List<Entity> player1Soldiers = getState().getEntities().stream().filter(c -> c.getPlayer().equals("player1")).collect(Collectors.toList());
-            attackTowers(blackTowerFirstPlayerOptional, electricTowerFirstPlayerOptional, player2Soldiers);
-            attackTowers(blackTowerSecondPlayerOptional, electricTowerSecondPlayerOptional, player1Soldiers);
+            List<Entity> player2Soldiers = getState().getEntities().stream().filter(c -> c.getPlayer().equals("player2") && c.getType() != EntityType.Home && c.getType() != EntityType.BlackTower && c.getType() != EntityType.ElectricTower).collect(Collectors.toList());
+            List<Entity> player1Soldiers = getState().getEntities().stream().filter(c -> c.getPlayer().equals("player1") && c.getType() != EntityType.Home && c.getType() != EntityType.BlackTower && c.getType() != EntityType.ElectricTower).collect(Collectors.toList());
+            attackTowers(blackTowerFirstPlayerOptional, electricTowerFirstPlayerOptional, player1Soldiers);
+            attackTowers(blackTowerSecondPlayerOptional, electricTowerSecondPlayerOptional, player2Soldiers);
         } catch (Exception ex) {
             ex.getMessage();
         }
@@ -182,19 +181,33 @@ public class Game extends Observable implements Runnable {
             Entity entity = playerSoldiers.get(i);
             if (blackTowerOptional.isPresent()) {
                 BlackTower blackTower = blackTowerOptional.get();
-                if (entity.getX() - 2 <= blackTower.getX()) {
+                if ((entity.getY() - blackTower.getY() >= -2)  && entity.getPlayer().equals("player2")) {
                     entity.takeDamage(blackTower.getDamage());
-                    if (entity.getRange() >= entity.getX() - 2) {
+                    System.out.println("Goblin Damage: " + entity.getHp());
+                    if (entity.getY() - blackTower.getY() >= entity.getRange()*-1) {
                         blackTower.takeDamage(entity.getDamage());
+                        System.out.println("Black Tower Damage: " + blackTower.getHp());
+                    }
+                }else if((entity.getY() - blackTower.getY() <= 2)  && entity.getPlayer().equals("player1")){
+                    entity.takeDamage(blackTower.getDamage());
+                    System.out.println("Goblin Damage: " + entity.getHp());
+                    if (entity.getY() - blackTower.getY() <=entity.getRange()) {
+                        blackTower.takeDamage(entity.getDamage());
+                        System.out.println("Black Tower Damage: " + blackTower.getHp());
                     }
                 }
                 getState().setCell(blackTower);
             }
             if (electricTowerOptional.isPresent()) {
                 ElectricTower electricTower = electricTowerOptional.get();
-                if (entity.getX() - 3 <= electricTower.getX()) {
+                if ((entity.getY() - electricTower.getY() >= -3)  && entity.getPlayer().equals("player2")) {
                     entity.takeDamage(electricTower.getDamage());
-                    if (entity.getRange() >= entity.getX() - 2) {
+                    if (entity.getY() - electricTower.getY() >= entity.getRange()*-1) {
+                        electricTower.takeDamage(entity.getDamage());
+                    }
+                }else if((entity.getY() - electricTower.getY() <= 3)  && entity.getPlayer().equals("player1")){
+                    entity.takeDamage(electricTower.getDamage());
+                    if (entity.getY() - electricTower.getY() <= entity.getRange()) {
                         electricTower.takeDamage(entity.getDamage());
                     }
                 }

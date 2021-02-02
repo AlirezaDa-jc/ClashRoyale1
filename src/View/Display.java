@@ -29,7 +29,7 @@ public class Display implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        if (this.checkLose() || this.checkWin()) {
+        if (this.checkLose()) {
             return;
         }
 
@@ -40,43 +40,23 @@ public class Display implements Observer {
 
     private boolean checkLose() {
 
-        if (this.game.getState().getLost()) {
+        if (this.game.getState().checkPlayer1Lost()) {
             this.game.stop();
             Platform.runLater(() -> this.pane.getChildren().clear());
-//            Text label = new Text("Game over !");
-//            label.setStyle("-fx-font: 70 arial;");
-//            String score = String.valueOf(Game.getScore());
-//            Text label1 = new Text("Score: " + score);
-//            label.setStyle("-fx-font: 50 arial;");
-//            Platform.runLater(() -> {
-//                this.pane.add(label, 0, 0);
-//                this.pane.add(label1, 1, 50);
-//                File file = new File("scores.txt");
-//                try {
-//                    FileWriter fr = new FileWriter(file, true);
-//                    fr.write(score+"\n");
-//
-//                    fr.close();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            });
-
+            Text label = new Text("Game over !");
+            label.setStyle("-fx-font: 70 arial;");
+            Text label1 = new Text("Player2 Wins");
+            label1.setStyle("-fx-font: 70 arial;");
+            return true;
+        }else  if (this.game.getState().checkPlayer2Lost()) {
+            this.game.stop();
+            Platform.runLater(() -> this.pane.getChildren().clear());
+            Text label = new Text("Game over !");
+            label.setStyle("-fx-font: 70 arial;");
+            Text label1 = new Text("Player1 Wins");
+            label1.setStyle("-fx-font: 70 arial;");
             return true;
         }
-        return false;
-    }
-
-    private boolean checkWin() {
-//        if (this.game.getState().noMoreGums()) {
-//            this.game.stop();
-//            Platform.runLater(() -> this.pane.getChildren().clear());
-//            Text label = new Text("You won !");
-//            label.setStyle("-fx-font: 90 arial;");
-//            Platform.runLater(() -> this.pane.add(label, 0, 0));
-//
-//            return true;
-//        }
         return false;
     }
 
