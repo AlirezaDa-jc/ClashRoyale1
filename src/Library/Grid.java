@@ -87,10 +87,12 @@ public class Grid {
     }
 
     public void setCell(Entity entity) {
-        int x = entity.getX();
         int y = entity.getY();
-        entities.add(entity);
-        cells[x][y] = entity;
+        if(y < 24) {
+            int x = entity.getX();
+            entities.add(entity);
+            cells[x][y] = entity;
+        }
     }
 
 

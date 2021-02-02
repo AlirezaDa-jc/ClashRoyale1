@@ -116,7 +116,7 @@ public class Entity {
             System.out.println("*");
             System.out.println(this.getY());
             grid.setCell(this);
-            this.grid.getCells()[this.x + xOffset][this.y + yOffset] = this;
+//            this.grid.getCells()[this.x + xOffset][this.y + yOffset] = this;
 //            this.grid.getCells()[this.x + xOffset][this.y + yOffset] = this;
             return true;
         }
@@ -149,6 +149,11 @@ public class Entity {
 
     public void takeDamage(int i) {
         hp =- i;
+        if(hp <= 0){
+            Entity defalt = new Entity(this.x, this.y, this.grid, EntityType.DEFAULT, "",
+                    Consts.getDefaultImgPath(), 0, 0, 0);
+            this.grid.setCell(defalt);
+        }
     }
 
 

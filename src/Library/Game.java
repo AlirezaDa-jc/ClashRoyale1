@@ -129,24 +129,27 @@ public class Game extends Observable implements Runnable {
     public void moveEntities() {
         ArrayList<Goblin> goblins = this.getState().getGoblins();
         for (Goblin ghost : goblins) {
+            System.out.println(goblins.size());
             ghost.move();
         }
         ArrayList<Archer> archers = this.getState().getArchers();
         for (Archer archer : archers) {
-            archer.move();
+
+                    archer.move();
+
         }
         ArrayList<Knight> knights = this.getState().getKnights();
         for (Knight knight : knights) {
-            knight.move();
+
+                    knight.move();
+
         }
         ArrayList<Shield> shields = this.getState().getShields();
         for (Shield shield : shields) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            shield.move();
+
+                    shield.move();
+
+
         }
     }
 

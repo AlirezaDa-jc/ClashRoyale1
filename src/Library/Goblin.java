@@ -10,7 +10,15 @@ public class Goblin extends Entity {
     }
 
     public void move() {
-        super.move(this,3);
+        new Thread(()->{
+            try {
+                Thread.sleep(300);
+                super.move(this,3);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
+
 
     }
 }
