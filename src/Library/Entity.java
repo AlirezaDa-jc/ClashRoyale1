@@ -5,16 +5,16 @@ package Library;
 import Utilities.Consts;
 
 public class Entity {
-
     protected int x;
     protected int y;
     protected final Grid grid;
-    protected final EntityType type;
+    protected EntityType type;
     protected String player;
     protected String imagePath;
     protected int hp;
     protected int damage;
     protected int range;
+    protected boolean dead = false;
 
     public Entity(int x, int y, Grid grid, EntityType type, String player, String imagePath, int hp, int damage, int range) {
         this.x = x;
@@ -103,23 +103,35 @@ public class Entity {
 //        return ret;
 //    }
 
+    public boolean isDead() {
+        return dead;
+    }
+
     private boolean move(int yOffset) {
         int y = yOffset;
-        boolean secondFlag = false;
-        boolean firstFlag = false;
-        while(y != 0){
-            firstFlag = this.grid.isMovable(x, this.y + y);
-            secondFlag = this.grid.isMovable(x, this.y - y);
-            if(!firstFlag && !secondFlag){
-                break;
+        boolean flag = false;
+        if (player.equals("player1")) {
+            while (y != 0) {
+                flag = this.grid.isMovable(x, this.y - y);
+                if (!flag) {
+                    break;
+                }
+                y--;
             }
-            y--;
+            if (moveEntity(yOffset, flag)) return true;
+            moveEntity(-1,true);
+        } else if (player.equals("player2")) {
+            while (y != 0) {
+                flag = this.grid.isMovable(x, this.y + y);
+                if (!flag) {
+                    break;
+                }
+                y--;
+            }
+            if (moveEntity(yOffset, flag)) return true;
+            moveEntity(1,true);
         }
-        if(player.equals("player1")){
-            if (moveEntity(yOffset, secondFlag)) return true;
-        }else if(player.equals("player2")) {
-            if (moveEntity(yOffset, firstFlag)) return true;
-        }
+
         this.grid.setCell(this);
         return false;
     }
@@ -153,20 +165,26 @@ public class Entity {
     }
 
 
-
     public void takeDamage(int i) {
         hp = hp - i;
-        if(hp <= 0){
-            this.grid.removeEntity(this);
-            if(this.getType()==EntityType.BlackTower || this.getType()== EntityType.ElectricTower){
-                if(this.getPlayer().equals("player1")){
+        if (hp <= 0) {
+            Entity defalt = new Entity(this.x, this.y, this.grid, EntityType.DEFAULT, "",
+                    Consts.getDefaultImgPath(), 0, 0, 0);
+            if (this.getType() == EntityType.BlackTower || this.getType() == EntityType.ElectricTower) {
+                if (this.getPlayer().equals("player1")) {
                     grid.remove1TowerPlayer1();
-                }else {
+                } else {
                     grid.remove1TowerPlayer2();
                 }
             }
-            Entity defalt = new Entity(this.x, this.y, this.grid, EntityType.DEFAULT, "",
-                    Consts.getDefaultImgPath(), 0, 0, 0);
+            type = EntityType.DEFAULT;
+            player = "";
+            imagePath = Consts.getDefaultImgPath();
+            hp = 0;
+            damage = 0;
+            range = 0;
+            dead= true;
+            this.grid.removeEntity(this);
             this.grid.setCell(defalt);
         }
     }
